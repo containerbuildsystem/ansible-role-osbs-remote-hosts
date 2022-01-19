@@ -1,0 +1,12 @@
+galaxy_info:
+  role_name: osbs_remote_host
+  author: Lianghui Yu
+  description: Setup remote host for OSBS podman build
+  company: Red Hat, Inc.
+  license: BSD
+  min_ansible_version: 2.1
+  platforms:
+    - name: EL
+      versions:
+        - 8
+dependencies: []

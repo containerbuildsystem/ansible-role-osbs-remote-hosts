@@ -1,0 +1,25 @@
+---
+- name: Create user accounts
+  user:
+    name: "{{ podman_user }}"
+    uid: "{{ podman_user_uid }}"
+
+- name: Enable persistent user session to allow running long-running services without logged in
+  command: loginctl enable-linger {{ podman_user }}
+  changed_when: false
+
+- name: Install Podman on RHEL8 server
+  dnf:
+    name:
+      - podman
+    state: present
+
+- name: Install machinectl to start podman service
+  dnf:
+    name:
+      - systemd-container
+    state: present
+
+- name: Enable and start rootless podman.socket
+  command: machinectl shell {{ podman_user }}@.host /usr/bin/systemctl --user enable --now podman.socket
+  changed_when: false

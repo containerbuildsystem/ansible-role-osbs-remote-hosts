@@ -14,6 +14,13 @@ Dependencies
 
 None.
 
+Required Variables
+------------
+
+Required:
+podman_user: username for running rootless podman socket
+podman_user_uid: uid for the user
+
 Example Playbook
 ----------------
 
