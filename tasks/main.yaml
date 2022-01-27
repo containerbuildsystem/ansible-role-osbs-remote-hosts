@@ -1,11 +1,17 @@
 ---
-- name: Create user accounts
+- name: Create group for user running rootless podman
+  group:
+    name: "{{ podman_user_group_name }}"
+    gid: "{{ podman_user_group_gid }}"
+
+- name: Create user for running rootless podman
   user:
-    name: "{{ podman_user }}"
+    name: "{{ podman_user_name }}"
     uid: "{{ podman_user_uid }}"
+    group: "{{ podman_user_group_name }}"
 
 - name: Enable persistent user session to allow running long-running services without logged in
-  command: loginctl enable-linger {{ podman_user }}
+  command: loginctl enable-linger {{ podman_user_name }}
   changed_when: false
 
 - name: Install Podman on RHEL8 server
@@ -25,5 +31,5 @@
   # ansible become methods ("sudo", "su" and etc) don't work in this
   # case, become method "machinectl" is not flexible enough to fulfill
   # the requirement either, run machinectl command as a workaround
-  command: machinectl shell {{ podman_user }}@.host /usr/bin/systemctl --user enable --now podman.socket
+  command: machinectl shell {{ podman_user_name }}@.host /usr/bin/systemctl --user enable --now podman.socket
   changed_when: false
