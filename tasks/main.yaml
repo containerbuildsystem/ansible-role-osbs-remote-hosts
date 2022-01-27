@@ -20,6 +20,17 @@
       - podman
     state: present
 
+- name: Create an empty mounts.conf to override podman default mounts
+  # See also: man containers-mounts.conf (shipped by containers-common)
+  # This is to avoid host repos being injected into OSBS image builds
+  copy:
+    content: ""
+    dest: /etc/containers/mounts.conf
+    force: true
+    group: root
+    owner: root
+    mode: 0664
+
 - name: Install machinectl to start podman service
   dnf:
     name:
