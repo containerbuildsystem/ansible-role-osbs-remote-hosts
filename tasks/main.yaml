@@ -21,5 +21,9 @@
     state: present
 
 - name: Enable and start rootless podman.socket
+  # rootless podman backend need to be started with a login session, so
+  # ansible become methods ("sudo", "su" and etc) don't work in this
+  # case, become method "machinectl" is not flexible enough to fulfill
+  # the requirement either, run machinectl command as a workaround
   command: machinectl shell {{ podman_user }}@.host /usr/bin/systemctl --user enable --now podman.socket
   changed_when: false
