@@ -23,6 +23,7 @@ Role Variables
 * `podman_user_group_gid` - gid of the group. Default: 2022.
 * `podman_user_name` - name of the user running rootless podman. Default: osbs-podman.
 * `podman_user_uid` - uid of the user running rootless podman. Default: 2022.
+* `podman_user_ssh_public_key` - public key for podman user ssh and podman-remote access
 
 Example Playbook
 ----------------

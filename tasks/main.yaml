@@ -10,6 +10,13 @@
     uid: "{{ podman_user_uid }}"
     group: "{{ podman_user_group_name }}"
 
+- name: Setup authorized keys for podman user
+  authorized_key:
+    user: "{{ podman_user_name }}"
+    key: "{{ podman_user_ssh_public_key }}"
+    manage_dir: true
+  when: podman_user_ssh_public_key is defined
+
 - name: Enable persistent user session to allow running long-running services without logged in
   command: loginctl enable-linger {{ podman_user_name }}
   changed_when: false
