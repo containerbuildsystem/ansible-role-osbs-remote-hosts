@@ -4,3 +4,7 @@ podman_user_group_name: osbs-podman
 podman_user_group_gid: 2022
 podman_pruning_until: "10m"
 podman_pruning_interval_minutes: "2"
+system_wide_conf_file: "/etc/environment"
+no_proxy_addresses: "localhost,127.0.0.1"
+proxy_url: "example.proxy"
+setup_proxy: false

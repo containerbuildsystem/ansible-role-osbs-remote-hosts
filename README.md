@@ -26,6 +26,10 @@ Role Variables
 * `podman_user_ssh_public_key` - public key for podman user ssh and podman-remote access
 * `podman_pruning_interval_minutes` - minutes interval for podman pruning job
 * `podman_pruning_until` - until for podman pruning command
+* `setup_proxy` - boolean, setup proxy. Default: false
+* `system_wide_conf_file` - path to system wide environment file
+* `no_proxy_addresses` - list of urls which shouldn't use proxy
+* `proxy_url` - proxy url
 
 Example Playbook
 ----------------
