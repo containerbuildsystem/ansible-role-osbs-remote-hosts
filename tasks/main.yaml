@@ -51,3 +51,10 @@
   # the requirement either, run machinectl command as a workaround
   command: machinectl shell {{ podman_user_name }}@.host /usr/bin/systemctl --user enable --now podman.socket
   changed_when: false
+
+- name: Add podman pruning cronjob
+  ansible.builtin.cron:
+    name: "podman pruner"
+    minute: "{{ podman_pruning_interval_minutes }}"
+    user: "{{ podman_user_name }}"
+    job: 'podman system prune --all --filter "until={{ podman_pruning_until }}" -f'
