@@ -58,34 +58,3 @@
     minute: "{{ podman_pruning_interval_minutes }}"
     user: "{{ podman_user_name }}"
     job: 'podman system prune --all --filter "until={{ podman_pruning_until }}" -f'
-
-- name: 'Remove duplicated lines in  {{ system_wide_conf_file }}'
-  lineinfile:
-    path: '{{ system_wide_conf_file }}'
-    regexp: '{{ item.regex }}'
-    state: absent
-  with_items:
-    - {regex: 'export HTTPS_PROXY=.+'}
-    - {regex: 'export NO_PROXY=.+'}
-    - {regex: 'export https_proxy=.+'}
-    - {regex: 'export no_proxy=.+'}
-    - {regex: 'HTTPS_PROXY=.+'}
-    - {regex: 'NO_PROXY=.+'}
-    - {regex: 'https_proxy=.+'}
-    - {regex: 'no_proxy=.+'}
-  when: setup_proxy
-
-- name: 'Include environment variables in {{ system_wide_conf_file }}'
-  lineinfile:
-    path: '{{ system_wide_conf_file }}'
-    line: '{{ item.env_variable }}'
-    regexp: '{{ item.regex }}'
-    create: true
-    state: present
-    mode: 0644
-  with_items:
-    - {regex: 'export HTTPS_PROXY=.+', env_variable: 'export HTTPS_PROXY="{{ proxy_url }}"'}
-    - {regex: 'export NO_PROXY=.+', env_variable: 'export NO_PROXY="{{ no_proxy_addresses }}"'}
-    - {regex: 'export https_proxy=.+', env_variable: 'export https_proxy="{{ proxy_url }}"'}
-    - {regex: 'export no_proxy=.+', env_variable: 'export no_proxy="{{ no_proxy_addresses }}"'}
-  when: setup_proxy
