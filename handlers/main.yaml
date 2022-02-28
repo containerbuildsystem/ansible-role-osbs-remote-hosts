@@ -1,0 +1,7 @@
+---
+- name: reload systemd
+  # Only reload daemon, use command module since systemd module doesn't support this
+  command: systemctl daemon-reload  # noqa command-instead-of-module
+
+- name: restart rootless podman
+  command: machinectl shell {{ podman_user_name }}@.host /usr/bin/systemctl --user restart podman.socket

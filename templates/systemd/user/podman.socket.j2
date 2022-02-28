@@ -1,0 +1,15 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=Podman API Socket
+Documentation=man:podman-system-service(1)
+
+[Socket]
+ListenStream=%t/podman/podman.sock
+SocketMode=0660
+{% if podman_ssh_user_name is defined and podman_ssh_user_name != podman_user_name %}
+ExecStartPost=/bin/sh -c '[[ _"$LOGNAME" == _"{{podman_user_name}}" ]] && chmod 0750 %t || /bin/true'
+{% endif %}
+
+[Install]
+WantedBy=sockets.target

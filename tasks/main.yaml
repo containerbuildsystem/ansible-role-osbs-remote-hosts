@@ -10,22 +10,40 @@
     uid: "{{ podman_user_uid }}"
     group: "{{ podman_user_group_name }}"
 
-- name: Setup authorized keys for podman user
+- name: Setup authorized keys for podman ssh user
   authorized_key:
-    user: "{{ podman_user_name }}"
-    key: "{{ podman_user_ssh_public_key }}"
+    user: "{{ podman_ssh_user_name if podman_ssh_user_name is defined else podman_user_name }}"
+    key: "{{ podman_ssh_user_public_key }}"
     manage_dir: true
-  when: podman_user_ssh_public_key is defined
+  when: podman_ssh_user_public_key is defined
 
 - name: Enable persistent user session to allow running long-running services without logged in
   command: loginctl enable-linger {{ podman_user_name }}
   changed_when: false
+
+- name: Add podman ssh user to podman run user group
+  user:
+    name: "{{ podman_ssh_user_name }}"
+    groups: "{{ podman_user_group_name }}"
+    append: true
+  when: podman_ssh_user_name is defined and podman_ssh_user_name != podman_user_name
 
 - name: Install Podman on RHEL8 server
   dnf:
     name:
       - podman
     state: present
+
+- name: Copy podman.socket systemd user config file
+  template:
+    src: "systemd/user/podman.socket.j2"
+    dest: "/usr/lib/systemd/user/podman.socket"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart rootless podman
 
 - name: Create an empty mounts.conf to override podman default mounts
   # See also: man containers-mounts.conf (shipped by containers-common)
