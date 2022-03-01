@@ -10,6 +10,24 @@
     uid: "{{ podman_user_uid }}"
     group: "{{ podman_user_group_name }}"
 
+- name: Set subordinate user/group IDs for podman user
+  lineinfile:
+    path: "{{ item.path }}"
+    line: "{{ item.line }}"
+    regexp: "{{ item.regex }}"
+    create: true
+    state: present
+    mode: 0644
+  with_items:
+    - path: "/etc/subuid"
+      regex: "^{{ podman_user_name }}:"
+      line: "{{ podman_user_name }}:{{ podman_user_subordinate_uid_start }}:{{ podman_user_subordinate_uid_count }}"
+    - path: "/etc/subgid"
+      regex: "^{{ podman_user_group_name }}:"
+      line: "{{ podman_user_group_name }}:{{ podman_user_subordinate_gid_start }}:{{ podman_user_subordinate_gid_count }}"
+  notify:
+    - migrate podman containers
+
 - name: Setup authorized keys for podman ssh user
   authorized_key:
     user: "{{ podman_ssh_user_name if podman_ssh_user_name is defined else podman_user_name }}"

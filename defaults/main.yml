@@ -2,5 +2,10 @@ podman_user_name: osbs-podman
 podman_user_uid: 2022
 podman_user_group_name: osbs-podman
 podman_user_group_gid: 2022
+# These subordinate numbers are picked per doc: https://systemd.io/UIDS-GIDS
+podman_user_subordinate_uid_start: 100000
+podman_user_subordinate_uid_count: 1878948191  # 1879048191 - 100000
+podman_user_subordinate_gid_start: 100000
+podman_user_subordinate_gid_count: 1878948191  # 1879048191 - 100000
 podman_pruning_until: "10m"
 podman_pruning_interval_minutes: "2"
