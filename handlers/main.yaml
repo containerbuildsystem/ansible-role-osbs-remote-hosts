@@ -5,3 +5,6 @@
 
 - name: restart rootless podman
   command: machinectl shell {{ podman_user_name }}@.host /usr/bin/systemctl --user restart podman.socket
+
+- name: migrate podman containers
+  command: podman system migrate
