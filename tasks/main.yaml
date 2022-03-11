@@ -39,6 +39,11 @@
   command: loginctl enable-linger {{ podman_user_name }}
   changed_when: false
 
+- name: Enable user lingering for ssh user to create systemd user runtime directory when system boot up
+  command: loginctl enable-linger {{ podman_ssh_user_name }}
+  when: podman_ssh_user_name is defined and podman_ssh_user_name != podman_user_name
+  changed_when: false
+
 - name: Add podman ssh user to podman run user group
   user:
     name: "{{ podman_ssh_user_name }}"
