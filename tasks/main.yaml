@@ -1,17 +1,17 @@
 ---
 - name: Create group for user running rootless podman
-  group:
+  ansible.builtin.group:
     name: "{{ podman_user_group_name }}"
     gid: "{{ podman_user_group_gid }}"
 
 - name: Create user for running rootless podman
-  user:
+  ansible.builtin.user:
     name: "{{ podman_user_name }}"
     uid: "{{ podman_user_uid }}"
     group: "{{ podman_user_group_name }}"
 
 - name: Set subordinate user/group IDs for podman user
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ item.path }}"
     line: "{{ item.line }}"
     regexp: "{{ item.regex }}"
@@ -36,29 +36,29 @@
   when: podman_ssh_user_public_key is defined
 
 - name: Enable persistent user session to allow running long-running services without logged in
-  command: loginctl enable-linger {{ podman_user_name }}
+  ansible.builtin.command: loginctl enable-linger {{ podman_user_name }}
   changed_when: false
 
 - name: Enable user lingering for ssh user to create systemd user runtime directory when system boot up
-  command: loginctl enable-linger {{ podman_ssh_user_name }}
+  ansible.builtin.command: loginctl enable-linger {{ podman_ssh_user_name }}
   when: podman_ssh_user_name is defined and podman_ssh_user_name != podman_user_name
   changed_when: false
 
 - name: Add podman ssh user to podman run user group
-  user:
+  ansible.builtin.user:
     name: "{{ podman_ssh_user_name }}"
     groups: "{{ podman_user_group_name }}"
     append: true
   when: podman_ssh_user_name is defined and podman_ssh_user_name != podman_user_name
 
 - name: Install Podman on RHEL8 server
-  dnf:
+  ansible.builtin.dnf:
     name:
       - podman
     state: present
 
 - name: Copy podman.socket systemd user config file
-  template:
+  ansible.builtin.template:
     src: "systemd/user/podman.socket.j2"
     dest: "/usr/lib/systemd/user/podman.socket"
     owner: root
@@ -71,7 +71,7 @@
 - name: Create an empty mounts.conf to override podman default mounts
   # See also: man containers-mounts.conf (shipped by containers-common)
   # This is to avoid host repos being injected into OSBS image builds
-  copy:
+  ansible.builtin.copy:
     content: ""
     dest: /etc/containers/mounts.conf
     force: true
@@ -80,7 +80,7 @@
     mode: 0664
 
 - name: Install machinectl to start podman service
-  dnf:
+  ansible.builtin.dnf:
     name:
       - systemd-container
     state: present
@@ -90,7 +90,7 @@
   # ansible become methods ("sudo", "su" and etc) don't work in this
   # case, become method "machinectl" is not flexible enough to fulfill
   # the requirement either, run machinectl command as a workaround
-  command: machinectl shell {{ podman_user_name }}@.host /usr/bin/systemctl --user enable --now podman.socket
+  ansible.builtin.command: machinectl shell {{ podman_user_name }}@.host /usr/bin/systemctl --user enable --now podman.socket
   changed_when: false
 
 - name: Add podman pruning cronjob
