@@ -44,6 +44,10 @@
   when: podman_ssh_user_name is defined and podman_ssh_user_name != podman_user_name
   changed_when: false
 
+- name: Print the podman_ssh_user_name and podman_user_name variables
+  ansible.builtin.debug:
+    msg: Compare variables {{ podman_ssh_user_name }} and {{ podman_user_name }}
+
 - name: Add podman ssh user to podman run user group
   ansible.builtin.user:
     name: "{{ podman_ssh_user_name }}"
