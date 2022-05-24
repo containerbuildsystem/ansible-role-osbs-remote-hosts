@@ -68,6 +68,17 @@
     - reload systemd
     - restart rootless podman
 
+- name: Copy podman.service systemd user config file
+  ansible.builtin.template:
+    src: "systemd/user/podman.service.j2"
+    dest: "/usr/lib/systemd/user/podman.service"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart rootless podman
+
 - name: Create an empty mounts.conf to override podman default mounts
   # See also: man containers-mounts.conf (shipped by containers-common)
   # This is to avoid host repos being injected into OSBS image builds
