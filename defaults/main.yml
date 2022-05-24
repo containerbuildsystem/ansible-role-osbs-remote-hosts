@@ -11,3 +11,4 @@ podman_user_subordinate_gid_start: 10000000
 podman_user_subordinate_gid_count: 1878948191  # 1879048191 - 100000
 podman_pruning_until: "10m"
 podman_pruning_interval_minutes: "2"
+podman_nofile_limit: 1024
