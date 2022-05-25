@@ -65,7 +65,7 @@
     group: root
     mode: 0644
   notify:
-    - reload systemd
+    - reload systemd for podman user
     - restart rootless podman
 
 - name: Copy podman.service systemd user config file
@@ -76,7 +76,7 @@
     group: root
     mode: 0644
   notify:
-    - reload systemd
+    - reload systemd for podman user
     - restart rootless podman
 
 - name: Create an empty mounts.conf to override podman default mounts
