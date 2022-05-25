@@ -8,3 +8,10 @@
 
 - name: migrate podman containers
   ansible.builtin.command: podman system migrate
+
+- name: restart podman user session
+  # note: we use the system-wide systemd here, not podman user's systemd --user
+  ansible.builtin.systemd:
+    unit: user@{{ podman_user_uid }}.service
+    state: restarted
+    daemon_reload: true
