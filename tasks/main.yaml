@@ -97,11 +97,25 @@
   notify:
     - restart podman user session
 
-- name: Create an empty mounts.conf to override podman default mounts
+- name: Create separate rhsm.conf for mounting into containers
+  ansible.builtin.copy:
+    content: |
+      [rhsm]
+      manage_repos = 0
+    dest: /etc/rhsm-for-osbs-builds.conf
+    force: true
+    group: root
+    owner: root
+    mode: 0644
+
+- name: Create /etc/containers/mounts.conf to override podman default mounts
   # See also: man containers-mounts.conf (shipped by containers-common)
   # This is to avoid host repos being injected into OSBS image builds
+  # We mount only the rhsm.conf file where we tell subscription-manager
+  # not to manage repos.
   ansible.builtin.copy:
-    content: ""
+    content: |
+      /etc/rhsm-for-osbs-builds.conf:/run/secrets/rhsm/rhsm.conf
     dest: /etc/containers/mounts.conf
     force: true
     group: root
