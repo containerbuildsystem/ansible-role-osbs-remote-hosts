@@ -60,7 +60,7 @@
 - name: Copy podman.socket systemd user config file
   ansible.builtin.template:
     src: "systemd/user/podman.socket.j2"
-    dest: "/usr/lib/systemd/user/podman.socket"
+    dest: "/etc/systemd/user/podman.socket"
     owner: root
     group: root
     mode: 0644
@@ -71,7 +71,7 @@
 - name: Copy podman.service systemd user config file
   ansible.builtin.template:
     src: "systemd/user/podman.service.j2"
-    dest: "/usr/lib/systemd/user/podman.service"
+    dest: "/etc/systemd/user/podman.service"
     owner: root
     group: root
     mode: 0644
