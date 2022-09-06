@@ -29,7 +29,7 @@ Role Variables
 * `podman_user_subordinate_gid_count` - subordinate gid count. Default: 1878948191.
 * `podman_ssh_user_name` - ssh user login name for connecting remote podman backend.
 * `podman_ssh_user_public_key` - ssh public key for user which is used to connect remote podman backend.
-* `podman_pruning_interval_minutes` - minutes interval for podman pruning job
+* `podman_pruning_interval_minutes` - minutes interval for podman pruning job (the maximum is 59)
 * `podman_pruning_until` - until for podman pruning command
 
 Example Playbook

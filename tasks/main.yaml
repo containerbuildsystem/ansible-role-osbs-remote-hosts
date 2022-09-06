@@ -139,6 +139,6 @@
 - name: Add podman pruning cronjob
   ansible.builtin.cron:
     name: "podman pruner"
-    minute: "{{ podman_pruning_interval_minutes }}"
+    minute: "*/{{ podman_pruning_interval_minutes }}"
     user: "{{ podman_user_name }}"
     job: 'podman system prune --all --filter "until={{ podman_pruning_until }}" -f'
