@@ -142,3 +142,37 @@
     minute: "*/{{ podman_pruning_interval_minutes }}"
     user: "{{ podman_user_name }}"
     job: 'podman system prune --all --filter "until={{ podman_pruning_until }}" -f'
+
+- name: Set up buildah container pruner
+  block:
+    - name: Sanity-check buildah_pruning_before
+      ansible.builtin.command:
+        argv:
+          - date
+          - --date
+          - '{{ buildah_pruning_before }}'
+      changed_when: false
+
+    - name: Install jq (prerequisite for buildah pruning script)
+      ansible.builtin.dnf:
+        name:
+          - jq
+        state: present
+
+    - name: Copy buildah pruning script
+      ansible.builtin.copy:
+        src: prune-buildah-containers.sh
+        dest: /usr/local/bin/prune-buildah-containers.sh
+        force: true
+        group: root
+        owner: root
+        mode: 0775
+
+    - name: Add buildah pruning cronjob
+      ansible.builtin.cron:
+        name: "buildah container pruner"
+        minute: "0"
+        hour: "*/{{ buildah_pruning_interval_hours }}"
+        user: "{{ podman_user_name }}"
+        job: "/usr/local/bin/prune-buildah-containers.sh '{{ buildah_pruning_before }}'"
+  when: buildah_pruning_enabled
