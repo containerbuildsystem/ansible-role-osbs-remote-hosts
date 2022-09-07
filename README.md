@@ -31,6 +31,9 @@ Role Variables
 * `podman_ssh_user_public_key` - ssh public key for user which is used to connect remote podman backend.
 * `podman_pruning_interval_minutes` - minutes interval for podman pruning job (the maximum is 59)
 * `podman_pruning_until` - until for podman pruning command
+* `buildah_pruning_enabled` - enable the buildah container pruner? Default true.
+* `buildah_pruning_interval_hours` - hours interval for the buildah pruner (the maximum is 23)
+* `buildah_pruning_before` - prune buildah containers older than this, e.g. '6 hours ago'
 
 Example Playbook
 ----------------
