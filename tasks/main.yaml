@@ -122,6 +122,17 @@
     owner: root
     mode: 0664
 
+- name: Increase file hard/soft limits in /e/s/limits.d
+  ansible.builtin.copy:
+    content: |
+      * hard nofile 1048576
+      * soft nofile unlimited
+    dest: /etc/security/limits.d/01-file-limits.conf
+    force: true
+    group: root
+    owner: root
+    mode: 0644
+
 - name: Install machinectl to start podman service
   ansible.builtin.dnf:
     name:
