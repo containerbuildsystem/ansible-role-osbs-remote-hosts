@@ -1,0 +1,8 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Before=systemd-logind.service
+[Slice]
+Slice=user.slice
+[Install]
+WantedBy=multi-user.target
