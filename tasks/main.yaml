@@ -87,6 +87,46 @@
     group: root
     mode: 0755
 
+- name: Create drop-in configuration directory for users systemd service
+  ansible.builtin.file:
+    path: "/etc/systemd/system/user@.service.d"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create drop-in configuration directory for user slice service
+  ansible.builtin.file:
+    path: "/etc/systemd/system/user-.slice.d"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Apply root slice
+  ansible.builtin.template:
+    src: "systemd/system/user-0.slice.j2"
+    dest: "/etc/systemd/system/user-0.slice"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Apply cgroup v2 limits to users systemd service
+  ansible.builtin.template:
+    src: "systemd/system/delegate.conf.j2"
+    dest: "/etc/systemd/system/user@.service.d/delegate.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Apply overrides to users slice
+  ansible.builtin.template:
+    src: "systemd/system/override.conf.j2"
+    dest: "/etc/systemd/system/user-.slice.d/override.conf"
+    owner: root
+    group: root
+    mode: 0644
+
 - name: Apply overrides to podman user systemd service
   ansible.builtin.template:
     src: "systemd/system/user@insert-uid.service.d/override.conf.j2"
