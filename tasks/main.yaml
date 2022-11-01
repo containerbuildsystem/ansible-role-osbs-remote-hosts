@@ -188,6 +188,7 @@
   changed_when: false
 
 - name: Add podman pruning cronjob
+  tags: pruning
   ansible.builtin.cron:
     name: "podman pruner"
     minute: "*/{{ podman_pruning_interval_minutes }}"
@@ -195,6 +196,7 @@
     job: 'podman system prune --all --filter "until={{ podman_pruning_until }}" -f'
 
 - name: Set up buildah container pruner
+  tags: pruning
   block:
     - name: Sanity-check buildah_pruning_before
       ansible.builtin.command:
