@@ -127,16 +127,6 @@
     group: root
     mode: 0644
 
-- name: Apply overrides to podman user systemd service
-  ansible.builtin.template:
-    src: "systemd/system/user@insert-uid.service.d/override.conf.j2"
-    dest: "/etc/systemd/system/user@{{ podman_user_uid }}.service.d/override.conf"
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - restart podman user session
-
 - name: Create separate rhsm.conf for mounting into containers
   ansible.builtin.copy:
     content: |
@@ -162,16 +152,23 @@
     owner: root
     mode: 0664
 
-- name: Increase file hard/soft limits in /e/s/limits.d
-  ansible.builtin.copy:
-    content: |
-      * hard nofile 1048576
-      * soft nofile unlimited
-    dest: /etc/security/limits.d/01-file-limits.conf
-    force: true
+- name: Apply 50-file-limits.conf to systemd/system
+  # Overrides system NOFILE limit
+  ansible.builtin.template:
+    src: "systemd/system/50-file-limits.conf.j2"
+    dest: "/etc/systemd/system.conf.d/50-file-limits.conf"
     group: root
     owner: root
     mode: 0644
+
+- name: Apply /etc/containers/containers.conf
+  # Currently, only increases NOFILE limit
+  ansible.builtin.template:
+    src: "containers/containers.conf.j2"
+    dest: "/etc/containers/containers.conf"
+    group: root
+    owner: root
+    mode: 0664
 
 - name: Install machinectl to start podman service
   ansible.builtin.dnf:

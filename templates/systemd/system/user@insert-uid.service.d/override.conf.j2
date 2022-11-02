@@ -1,7 +1,0 @@
-{{ ansible_managed | comment }}
-
-# Overrides for the `systemd --user` service for the OSBS Podman user.
-
-[Service]
-# The default soft limit of 1024 is not sufficient. Inherit limits from systemd (PID 1)
-LimitNOFILE=infinity
