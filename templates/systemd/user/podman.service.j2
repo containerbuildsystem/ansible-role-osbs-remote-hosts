@@ -12,7 +12,6 @@ Type=exec
 KillMode=process
 Environment=LOGGING="--log-level=info"
 ExecStart=/usr/bin/podman $LOGGING system service
-LimitNOFILE={{ podman_nofile_limit }}
 
 [Install]
 WantedBy=multi-user.target

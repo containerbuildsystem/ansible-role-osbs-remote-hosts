@@ -1,0 +1,4 @@
+[containers]
+default_ulimits = [
+  "nofile={{ podman_nofile_limit }}:{{ podman_nofile_limit }}",
+]
