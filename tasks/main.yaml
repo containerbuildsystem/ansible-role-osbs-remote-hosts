@@ -9,6 +9,7 @@
     name: "{{ podman_user_name }}"
     uid: "{{ podman_user_uid }}"
     group: "{{ podman_user_group_name }}"
+    shell: "{{ podman_shell }}"
 
 - name: Set subordinate user/group IDs for podman user
   ansible.builtin.lineinfile:
